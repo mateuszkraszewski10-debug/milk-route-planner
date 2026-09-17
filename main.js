@@ -8,7 +8,7 @@ const store = new VehicleStore(localStorage);
 const app = document.querySelector('#app');
 if (!app)
     throw new Error('Missing #app');
-let farmerRowCount = 10;
+let farmerRowCount = 0;
 function profileOptions(kind) {
     return store.loadAll().filter((p) => p.kind === kind)
         .map((p) => `<option value="${p.registration}">${p.registration} · ${p.capacitiesLiters.join(' / ')} l</option>`)
@@ -58,23 +58,23 @@ function render() {
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><h2>2. Gospodarze</h2><p>Kolejność jest stała. Wersja offline — wpisz dane ręcznie.</p></div><div class="farmer-toolbar"><button id="add-farmer" class="secondary add-farmer-button">+ Dodaj wiersz</button></div></div>
+      <div class="section-heading"><div><h2>2. Gospodarze</h2><p>Kolejność jest stała. Wersja offline — wpisz dane ręcznie.</p></div><div class="farmer-toolbar" data-farmer-list-content hidden><button id="add-farmer" class="secondary add-farmer-button">+ Dodaj wiersz</button></div></div>
       <div class="trailer-access-note"><strong>Przyczepa TAK</strong> = możliwy wjazd z przyczepą na dane gospodarstwo.</div>
       <div class="farmer-count-control">
         <label>Liczba gospodarzy na trasie
-          <input id="farmer-count" type="number" min="1" max="60" inputmode="numeric" value="${farmerRowCount}">
+          <input id="farmer-count" type="number" min="1" max="60" inputmode="numeric" placeholder="np. 24" value="${farmerRowCount || ''}">
         </label>
         <button id="set-farmer-count" type="button" class="secondary">Utwórz listę</button>
         <small>Wpisz liczbę gospodarzy, a aplikacja przygotuje dokładnie tyle wierszy.</small>
       </div>
-      <div class="table-scroll"><table id="farmer-table" class="farmer-table"><thead><tr><th>LP</th><th>Gospodarz</th><th>Prognoza</th><th data-trailer-column>Wjazd przyczepą</th><th></th></tr></thead><tbody id="farmer-body">${farmerRows()}</tbody></table></div>
-      <div class="route-options">
+      <div class="table-scroll" data-farmer-list-content hidden><table id="farmer-table" class="farmer-table"><thead><tr><th>LP</th><th>Gospodarz</th><th>Prognoza</th><th data-trailer-column>Wjazd przyczepą</th><th></th></tr></thead><tbody id="farmer-body">${farmerRows()}</tbody></table></div>
+      <div class="route-options" data-farmer-list-content hidden>
         <label>Preferowane przepompowanie po gospodarzu
           <input id="preferred-transfer-order" type="number" min="1" placeholder="auto">
           <small>Zostaw puste, a aplikacja spróbuje wybrać naturalny punkt automatycznie.</small>
         </label>
       </div>
-      <div class="actions"><button id="calculate" class="primary">Policz cały plan</button></div>
+      <div class="actions" data-farmer-list-content hidden><button id="calculate" class="primary">Policz cały plan</button></div>
     </section>
 
     <div id="plan-output"></div>
@@ -130,8 +130,15 @@ function writeFarmerDrafts(rows) {
     const trailerEnabled = document.querySelector('#use-trailer')?.checked ?? false;
     const countInput = document.querySelector('#farmer-count');
     if (countInput)
-        countInput.value = String(farmerRowCount);
+        countInput.value = farmerRowCount > 0 ? String(farmerRowCount) : '';
+    syncFarmerListVisibility();
     syncTrailerAvailability(trailerEnabled);
+}
+function syncFarmerListVisibility() {
+    const visible = farmerRowCount > 0;
+    document.querySelectorAll('[data-farmer-list-content]').forEach((element) => {
+        element.hidden = !visible;
+    });
 }
 function syncTrailerAvailability(enabled) {
     const wrap = document.querySelector('#trailer-wrap');
@@ -284,6 +291,7 @@ function bindEvents() {
             output.innerHTML = `<section class="panel error-panel"><h2>Sprawdź dane</h2><p>${error instanceof Error ? error.message : String(error)}</p></section>`;
         }
     });
+    syncFarmerListVisibility();
     syncTrailerAvailability(document.querySelector('#use-trailer')?.checked ?? false);
     syncDeleteProfileButtons();
 }
