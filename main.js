@@ -59,6 +59,7 @@ function render() {
 
     <section class="panel">
       <div class="section-heading"><div><h2>2. Gospodarze</h2><p>Kolejność jest stała. Wersja offline — wpisz dane ręcznie.</p></div><div class="farmer-toolbar"><button id="add-farmer" class="secondary add-farmer-button">+ Dodaj wiersz</button></div></div>
+      <div class="trailer-access-note"><strong>Przyczepa TAK</strong> = możliwy wjazd z przyczepą na dane gospodarstwo.</div>
       <div class="farmer-count-control">
         <label>Liczba gospodarzy na trasie
           <input id="farmer-count" type="number" min="1" max="60" inputmode="numeric" value="${farmerRowCount}">
