@@ -258,6 +258,18 @@ function bindEvents() {
             countInput.value = String(farmerRowCount);
         animateActionButton(event.currentTarget, 'row-added', 500);
     });
+    document.querySelector('#farmer-body')?.addEventListener('keydown', (event) => {
+        const input = event.target.closest('[data-farmer-liters]');
+        if (!input || event.key !== 'Enter')
+            return;
+        event.preventDefault();
+        const index = Number(input.dataset.farmerLiters);
+        const next = document.querySelector(`[data-farmer-liters="${index + 1}"]`);
+        if (next) {
+            next.focus();
+            next.select();
+        }
+    });
     document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove-farmer]');
         if (!button)
