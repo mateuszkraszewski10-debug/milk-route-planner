@@ -211,7 +211,12 @@ function bindEvents() {
         if (!button)
             return;
         const index = Number(button.dataset.removeFarmer);
-        writeFarmerDrafts(removeFarmerDraft(readFarmerDrafts(), index));
+        const drafts = readFarmerDrafts();
+        const draft = drafts[index];
+        const label = draft?.name.trim() || `Gospodarz ${index + 1}`;
+        if (!confirm(`Usunąć wiersz ${index + 1}: ${label}?`))
+            return;
+        writeFarmerDrafts(removeFarmerDraft(drafts, index));
     });
     document.querySelector('#calculate')?.addEventListener('click', () => {
         const output = document.querySelector('#plan-output');
