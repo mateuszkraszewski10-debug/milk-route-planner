@@ -58,7 +58,14 @@ function render() {
     </section>
 
     <section class="panel">
-      <div class="section-heading"><div><h2>2. Gospodarze</h2><p>Kolejność jest stała. Wersja offline — wpisz dane ręcznie.</p></div><div class="farmer-toolbar"><button id="add-farmer" class="secondary">+ Dodaj wiersz</button></div></div>
+      <div class="section-heading"><div><h2>2. Gospodarze</h2><p>Kolejność jest stała. Wersja offline — wpisz dane ręcznie.</p></div><div class="farmer-toolbar"><button id="add-farmer" class="secondary add-farmer-button">+ Dodaj wiersz</button></div></div>
+      <div class="farmer-count-control">
+        <label>Liczba gospodarzy na trasie
+          <input id="farmer-count" type="number" min="1" max="60" inputmode="numeric" value="${farmerRowCount}">
+        </label>
+        <button id="set-farmer-count" type="button" class="secondary">Utwórz listę</button>
+        <small>Wpisz liczbę gospodarzy, a aplikacja przygotuje dokładnie tyle wierszy.</small>
+      </div>
       <div class="table-scroll"><table id="farmer-table" class="farmer-table"><thead><tr><th>LP</th><th>Gospodarz</th><th>Prognoza</th><th data-trailer-column>Wjazd przyczepą</th><th></th></tr></thead><tbody id="farmer-body">${farmerRows()}</tbody></table></div>
       <div class="route-options">
         <label>Preferowane przepompowanie po gospodarzu
@@ -120,6 +127,9 @@ function writeFarmerDrafts(rows) {
             trailer.checked = row.trailerAccess;
     });
     const trailerEnabled = document.querySelector('#use-trailer')?.checked ?? false;
+    const countInput = document.querySelector('#farmer-count');
+    if (countInput)
+        countInput.value = String(farmerRowCount);
     syncTrailerAvailability(trailerEnabled);
 }
 function syncTrailerAvailability(enabled) {
@@ -203,8 +213,37 @@ function bindEvents() {
             alert(error instanceof Error ? error.message : String(error));
         }
     }));
-    document.querySelector('#add-farmer')?.addEventListener('click', () => {
+    document.querySelector('#set-farmer-count')?.addEventListener('click', () => {
+        const input = document.querySelector('#farmer-count');
+        const requested = Number(input?.value);
+        if (!Number.isInteger(requested) || requested < 1 || requested > 60) {
+            alert('Wpisz liczbę gospodarzy od 1 do 60.');
+            return;
+        }
+        const drafts = readFarmerDrafts();
+        if (requested < drafts.length) {
+            const removed = drafts.slice(requested);
+            const hasData = removed.some((row) => row.name.trim() || row.liters.trim() || row.trailerAccess);
+            if (hasData && !confirm(`Zmniejszyć listę do ${requested} gospodarzy? Dane z dalszych wierszy zostaną usunięte.`))
+                return;
+        }
+        const next = drafts.slice(0, requested);
+        while (next.length < requested)
+            next.push({ name: '', liters: '', trailerAccess: false });
+        writeFarmerDrafts(next);
+        if (input)
+            input.value = String(farmerRowCount);
+    });
+    document.querySelector('#add-farmer')?.addEventListener('click', (event) => {
         writeFarmerDrafts(addFarmerDraft(readFarmerDrafts()));
+        const countInput = document.querySelector('#farmer-count');
+        if (countInput)
+            countInput.value = String(farmerRowCount);
+        const button = event.currentTarget;
+        button.classList.remove('row-added');
+        void button.offsetWidth;
+        button.classList.add('row-added');
+        window.setTimeout(() => button.classList.remove('row-added'), 500);
     });
     document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove-farmer]');
