@@ -1,11 +1,11 @@
-const CACHE = 'milk-route-planner-v1.24';
+const CACHE = 'milk-route-planner-v1.25';
 const ASSETS = [
   './',
   './index.html',
   './styles-v1.24.css',
-  './main-v1.24.js',
+  './main-v1.25.js',
   './domain/models.js',
-  './domain/planner-v1.24.js',
+  './domain/planner-v1.25.js',
   './domain/capacityPolicy.js',
   './domain/planner.js',
   './storage/vehicleStore.js',
