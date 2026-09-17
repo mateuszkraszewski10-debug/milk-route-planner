@@ -162,6 +162,14 @@ function readFarmers(trailerEnabled) {
     });
     return farmers;
 }
+function animateActionButton(button, className = 'action-pulse', duration = 550) {
+    if (!button)
+        return;
+    button.classList.remove(className);
+    void button.offsetWidth;
+    button.classList.add(className);
+    window.setTimeout(() => button.classList.remove(className), duration);
+}
 function updateConnectionStatus() {
     const el = document.querySelector('#connection-status');
     if (!el)
@@ -234,17 +242,14 @@ function bindEvents() {
         writeFarmerDrafts(next);
         if (input)
             input.value = String(farmerRowCount);
+        animateActionButton(document.querySelector('#set-farmer-count'));
     });
     document.querySelector('#add-farmer')?.addEventListener('click', (event) => {
         writeFarmerDrafts(addFarmerDraft(readFarmerDrafts()));
         const countInput = document.querySelector('#farmer-count');
         if (countInput)
             countInput.value = String(farmerRowCount);
-        const button = event.currentTarget;
-        button.classList.remove('row-added');
-        void button.offsetWidth;
-        button.classList.add('row-added');
-        window.setTimeout(() => button.classList.remove('row-added'), 500);
+        animateActionButton(event.currentTarget, 'row-added', 500);
     });
     document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove-farmer]');
@@ -258,7 +263,8 @@ function bindEvents() {
             return;
         writeFarmerDrafts(removeFarmerDraft(drafts, index));
     });
-    document.querySelector('#calculate')?.addEventListener('click', () => {
+    document.querySelector('#calculate')?.addEventListener('click', (event) => {
+        animateActionButton(event.currentTarget, 'calculate-pulse', 650);
         const output = document.querySelector('#plan-output');
         if (!output)
             return;
