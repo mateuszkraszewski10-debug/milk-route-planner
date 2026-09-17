@@ -311,6 +311,14 @@ W sekcji gospodarzy można wpisać liczbę gospodarzy na trasie i utworzyć dok�
 
 Podczas wpisywania litrów można nacisnąć **Enter / Dalej w polu prognozy**, aby automatycznie przejść do pola prognozy następnego gospodarza. Pola używają `enterkeyhint="next"`, aby działało to również wygodniej na klawiaturze ekranowej telefonu.
 
+## Potwierdzanie usuwania
+
+Usuwanie gospodarza korzysta z własnego okna potwierdzenia w interfejsie zamiast systemowego okna przeglądarki. Okno pokazuje numer i nazwę gospodarza oraz przyciski „Anuluj” i „Usuń gospodarza”.
+
+## Nieaktualny plan
+
+Po poprawnym obliczeniu planu każda zmiana danych mających wpływ na trasę oznacza wynik jako **„Plan nieaktualny”**. Nad starym wynikiem pojawia się żółty komunikat i przycisk „Policz ponownie”. Stary plan pozostaje widoczny, ale jest przygaszony do czasu ponownego obliczenia.
+
 ## Tryb mobilny
 
 Na małym ekranie lista gospodarstw zmienia się z szerokiej tabeli w pionowe karty.
@@ -326,7 +334,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.19 jest przygotowana jako PWA.
+Wersja v1.20 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -337,7 +345,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.19
+milk-route-planner-v1.20
 ```
 
 ## OCR
@@ -395,4 +403,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.19 Offline**
+Aktualna wersja: **v1.20 Offline**
