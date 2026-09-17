@@ -307,6 +307,10 @@ W sekcji gospodarzy można wpisać liczbę gospodarzy na trasie i utworzyć dok�
 - jeśli usuwane dalsze wiersze zawierają dane, aplikacja prosi o potwierdzenie,
 - przycisk „+ Dodaj wiersz” nadal dodaje pojedynczy wiersz i ma wizualną animację potwierdzającą kliknięcie.
 
+## Szybkie wpisywanie prognoz
+
+Podczas wpisywania litrów można nacisnąć **Enter w polu prognozy**, aby automatycznie przejść do pola prognozy następnego gospodarza.
+
 ## Tryb mobilny
 
 Na małym ekranie lista gospodarstw zmienia się z szerokiej tabeli w pionowe karty.
@@ -322,7 +326,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.15 jest przygotowana jako PWA.
+Wersja v1.16 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -333,7 +337,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.15
+milk-route-planner-v1.16
 ```
 
 ## OCR
@@ -391,4 +395,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.15 Offline**
+Aktualna wersja: **v1.16 Offline**
