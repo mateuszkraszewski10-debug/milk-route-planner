@@ -329,6 +329,17 @@ Przed wynikiem obliczenia aplikacja pokazuje krótkie podsumowanie danych użyty
 
 Jeśli błąd planowania zawiera numer gospodarza, aplikacja automatycznie przewija do odpowiedniego wiersza i chwilowo go wyróżnia.
 
+## Tryb kierowcy
+
+Po poprawnym policzeniu trasy pojawia się przycisk „Tryb kierowcy”. Otwiera pełnoekranowy, uproszczony widok zawierający tylko:
+- numer gospodarza,
+- prognozowaną ilość litrów,
+- komorę lub komory odbioru,
+- informację „teraz → docelowo”, jeśli mleko ma być przepompowane,
+- osobno wyróżniony moment przepompowania.
+
+Tryb kierowcy nie pokazuje ustawień ani pól edycji. Przycisk „Wróć do edycji” zamyka widok i wraca do pełnego planera.
+
 ## Tryb mobilny
 
 Na małym ekranie lista gospodarstw zmienia się z szerokiej tabeli w pionowe karty.
@@ -344,7 +355,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.21 jest przygotowana jako PWA.
+Wersja v1.22 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -355,7 +366,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.21
+milk-route-planner-v1.22
 ```
 
 ## OCR
@@ -413,4 +424,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.21 Offline**
+Aktualna wersja: **v1.22 Offline**

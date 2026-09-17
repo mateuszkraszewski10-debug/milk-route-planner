@@ -37,3 +37,39 @@ export function renderPlanHtml(plan) {
     </div>`).join('');
     return `<section class="panel"><div class="section-heading"><div><h2>Gotowy plan kursu</h2><p>Sprawdź plan przed wyjazdem.</p></div></div><div class="plan-list">${rows.join('')}</div><h3>Stan końcowy komór</h3><div class="tank-grid">${summaries}</div></section>`;
 }
+
+export function renderDriverModeHtml(plan) {
+    if (!plan.feasible)
+        return '';
+    const transferByOrder = new Map(plan.transfers.map((t) => [t.afterFarmerOrder, t]));
+    const rows = [];
+    for (const row of plan.rows) {
+        const parts = row.parts.map((part) => {
+            if (part.targetCompartment !== part.currentCompartment) {
+                return `<div class="driver-assignment staging"><strong>${part.liters} l</strong><span>teraz ${part.currentCompartment} → docelowo ${part.targetCompartment}</span></div>`;
+            }
+            return `<div class="driver-assignment"><strong>${part.liters} l</strong><span>komora ${part.targetCompartment}</span></div>`;
+        }).join('');
+        rows.push(`<section class="driver-stop">
+          <div class="driver-stop-number">${row.farmer.order}</div>
+          <div class="driver-stop-data">
+            <div class="driver-stop-liters">${row.farmer.forecastLiters.toLocaleString('pl-PL')} l</div>
+            <div class="driver-assignments">${parts}</div>
+          </div>
+        </section>`);
+        const transfer = transferByOrder.get(row.farmer.order);
+        if (transfer) {
+            rows.push(`<section class="driver-transfer">
+              <div class="driver-transfer-title">PRZEPOMPOWANIE PO ${transfer.afterFarmerOrder}</div>
+              <div class="driver-transfer-pairs">${transfer.pairs.map((p) => `<strong>${p.from} → ${p.to} · ${p.liters} l</strong>`).join('')}</div>
+            </section>`);
+        }
+    }
+    return `<div id="driver-mode" class="driver-mode" role="dialog" aria-modal="true" aria-label="Tryb kierowcy">
+      <header class="driver-header">
+        <div><span>Milk Route Planner</span><h2>Tryb kierowcy</h2></div>
+        <button type="button" id="exit-driver-mode" class="driver-exit">Wróć do edycji</button>
+      </header>
+      <main class="driver-route">${rows.join('')}</main>
+    </div>`;
+}

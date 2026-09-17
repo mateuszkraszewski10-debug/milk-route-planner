@@ -1,7 +1,7 @@
 import { createVehicleProfile } from './domain/models.js';
 import { planRoute } from './domain/planner.js';
 import { VehicleStore } from './storage/vehicleStore.js';
-import { renderPlanHtml } from './ui/planView.js';
+import { renderPlanHtml, renderDriverModeHtml } from './ui/planView.js';
 import { parsePreferredTransferOrder } from './ui/routeOptions.js';
 import { addFarmerDraft, removeFarmerDraft } from './ui/farmerRows.js';
 const store = new VehicleStore(localStorage);
@@ -10,6 +10,7 @@ if (!app)
     throw new Error('Missing #app');
 let farmerRowCount = 0;
 let hasCalculatedPlan = false;
+let lastCalculatedPlan = null;
 function profileOptions(kind) {
     return store.loadAll().filter((p) => p.kind === kind)
         .map((p) => `<option value="${p.registration}">${p.registration} · ${p.capacitiesLiters.join(' / ')} l</option>`)
@@ -453,6 +454,7 @@ function bindEvents() {
             return;
         farmerRowCount = 0;
         hasCalculatedPlan = false;
+        lastCalculatedPlan = null;
         const body = document.querySelector('#farmer-body');
         if (body)
             body.innerHTML = '';
@@ -483,13 +485,25 @@ function bindEvents() {
             const trailer = useTrailer ? readProfile('trailer') : undefined;
             const preferredTransferAfterFarmerOrder = parsePreferredTransferOrder(document.querySelector('#preferred-transfer-order')?.value ?? '', farmers.length);
             const plan = planRoute({ truck, trailer, farmers, preferredTransferAfterFarmerOrder });
-            output.innerHTML = `<div class="precalc-summary">Policzono dla: <strong>${farmers.length} gospodarzy</strong> · <strong>${farmers.reduce((sum, farmer) => sum + farmer.forecastLiters, 0).toLocaleString('pl-PL')} l</strong>${useTrailer ? ` · <strong>${farmers.filter((farmer) => farmer.trailerAccess).length} z wjazdem przyczepą</strong>` : ''}</div>` + renderPlanHtml(plan);
+            output.innerHTML = `<div class="plan-result-toolbar"><div class="precalc-summary">Policzono dla: <strong>${farmers.length} gospodarzy</strong> · <strong>${farmers.reduce((sum, farmer) => sum + farmer.forecastLiters, 0).toLocaleString('pl-PL')} l</strong>${useTrailer ? ` · <strong>${farmers.filter((farmer) => farmer.trailerAccess).length} z wjazdem przyczepą</strong>` : ''}</div><button type="button" id="open-driver-mode" class="driver-mode-button">Tryb kierowcy</button></div>` + renderPlanHtml(plan);
             hasCalculatedPlan = true;
+            lastCalculatedPlan = plan;
+            document.querySelector('#open-driver-mode')?.addEventListener('click', () => {
+                if (!lastCalculatedPlan)
+                    return;
+                document.body.insertAdjacentHTML('beforeend', renderDriverModeHtml(lastCalculatedPlan));
+                document.body.classList.add('driver-mode-open');
+                document.querySelector('#exit-driver-mode')?.addEventListener('click', () => {
+                    document.querySelector('#driver-mode')?.remove();
+                    document.body.classList.remove('driver-mode-open');
+                });
+            });
             clearPlanStale();
             output.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         catch (error) {
             hasCalculatedPlan = false;
+            lastCalculatedPlan = null;
             const message = error instanceof Error ? error.message : String(error);
             output.innerHTML = `<section class="panel error-panel"><h2>Sprawdź dane</h2><p>${message}</p></section>`;
             focusFarmerFromError(message);
