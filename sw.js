@@ -9,7 +9,7 @@ const ASSETS = [
   './domain/capacityPolicy.js',
   './domain/planner.js',
   './storage/vehicleStore.js',
-  './ui/planView-v1.23.js',
+  './ui/planView-v1.25.js',
   './ui/farmerRows.js',
   './ui/routeOptions.js',
   './manifest.webmanifest',
