@@ -118,6 +118,8 @@ Celem jest ograniczenie zbędnego przepompowywania.
 
 ## Przepompowanie
 
+Planner najpierw próbuje policzyć całą trasę bez żadnego przepompowania. Jeżeli taki plan jest wykonalny, ma pierwszeństwo bez względu na inne preferencje. Dopiero gdy plan bez transferu jest niewykonalny, planner może szukać wariantu z jednym przepompowaniem.
+
 W całej trasie dozwolony jest maksymalnie **jeden postój na przepompowanie**.
 
 Podczas tego postoju można przepompować:
@@ -359,7 +361,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.25 jest przygotowana jako PWA.
+Wersja v1.26 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -370,7 +372,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.25
+milk-route-planner-v1.26
 ```
 
 ## OCR
@@ -428,4 +430,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.25 Offline**
+Aktualna wersja: **v1.26 Offline**
