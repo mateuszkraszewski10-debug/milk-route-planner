@@ -41,8 +41,14 @@ function render() {
     <section class="panel">
       <div class="section-heading"><div><h2>1. Pojazdy i pojemności</h2><p>Wybierz zapisany pojazd albo wpisz pojemności ręcznie.</p></div></div>
       <div class="saved-grid">
-        <label>Zapisane auto<select id="saved-truck"><option value="">— wybierz —</option>${profileOptions('truck')}</select></label>
-        <label>Zapisana przyczepa<select id="saved-trailer"><option value="">— wybierz —</option>${profileOptions('trailer')}</select></label>
+        <div class="saved-profile-control">
+          <label>Zapisane auto<select id="saved-truck"><option value="">— wybierz —</option>${profileOptions('truck')}</select></label>
+          <button type="button" class="delete-profile" data-delete-profile="truck" disabled>Usuń zapisane auto</button>
+        </div>
+        <div class="saved-profile-control">
+          <label>Zapisana przyczepa<select id="saved-trailer"><option value="">— wybierz —</option>${profileOptions('trailer')}</select></label>
+          <button type="button" class="delete-profile" data-delete-profile="trailer" disabled>Usuń zapisaną przyczepę</button>
+        </div>
       </div>
       <div class="vehicle-grid">
         ${vehicleFields('truck', 'Auto · komory 1–3', [5300, 5300, 5300])}
@@ -80,6 +86,13 @@ function fillProfile(prefix, profile) {
         const input = document.querySelector(`#${prefix}-c${i}`);
         if (input)
             input.value = String(capacity);
+    });
+}
+function syncDeleteProfileButtons() {
+    document.querySelectorAll('[data-delete-profile]').forEach((button) => {
+        const kind = button.dataset.deleteProfile;
+        const select = document.querySelector(`#saved-${kind}`);
+        button.disabled = !select?.value;
     });
 }
 function readFarmerDrafts() {
@@ -155,13 +168,31 @@ function bindEvents() {
         const profile = store.loadAll().find((p) => p.kind === 'truck' && p.registration === reg);
         if (profile)
             fillProfile('truck', profile);
+        syncDeleteProfileButtons();
     });
     document.querySelector('#saved-trailer')?.addEventListener('change', (event) => {
         const reg = event.target.value;
         const profile = store.loadAll().find((p) => p.kind === 'trailer' && p.registration === reg);
         if (profile)
             fillProfile('trailer', profile);
+        syncDeleteProfileButtons();
     });
+    document.querySelectorAll('[data-delete-profile]').forEach((button) => button.addEventListener('click', () => {
+        const kind = button.dataset.deleteProfile;
+        const select = document.querySelector(`#saved-${kind}`);
+        const registration = select?.value ?? '';
+        if (!registration)
+            return;
+        const label = kind === 'truck' ? 'auto' : 'przyczepę';
+        if (!confirm(`Usunąć zapisane ${label} ${registration}?`))
+            return;
+        store.delete(kind, registration);
+        if (select) {
+            select.innerHTML = `<option value="">— wybierz —</option>${profileOptions(kind)}`;
+            select.value = '';
+        }
+        syncDeleteProfileButtons();
+    }));
     document.querySelectorAll('[data-save-profile]').forEach((button) => button.addEventListener('click', () => {
         const prefix = button.dataset.saveProfile;
         try {
@@ -203,6 +234,7 @@ function bindEvents() {
         }
     });
     syncTrailerAvailability(document.querySelector('#use-trailer')?.checked ?? false);
+    syncDeleteProfileButtons();
 }
 render();
 updateConnectionStatus();
