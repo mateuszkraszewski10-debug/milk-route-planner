@@ -96,6 +96,8 @@ Każde gospodarstwo musi mieć prognozę większą od 0 l.
 
 ## Wjazd z przyczepą
 
+W interfejsie **„Przyczepa TAK” oznacza, że możliwy jest wjazd z przyczepą na dane gospodarstwo.**
+
 Każde gospodarstwo ma informację:
 
 **Wjazd z przyczepą: TAK / NIE**
@@ -320,7 +322,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.12 jest przygotowana jako PWA.
+Wersja v1.13 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -331,7 +333,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.12
+milk-route-planner-v1.13
 ```
 
 ## OCR
@@ -389,4 +391,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.12 Offline**
+Aktualna wersja: **v1.13 Offline**
