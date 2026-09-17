@@ -270,13 +270,25 @@ function bindEvents() {
         input.blur();
         return false;
     };
+    let enterNavigationLocked = false;
     document.querySelector('#farmer-body')?.addEventListener('keydown', (event) => {
         const input = event.target instanceof Element ? event.target.closest('[data-farmer-liters]') : null;
         const isEnter = event.key === 'Enter' || event.key === 'NumpadEnter' || event.keyCode === 13;
         if (!input || !isEnter)
             return;
         event.preventDefault();
+        if (enterNavigationLocked || event.repeat)
+            return;
+        enterNavigationLocked = true;
         moveToNextForecast(input);
+    });
+    document.querySelector('#farmer-body')?.addEventListener('keyup', (event) => {
+        const isEnter = event.key === 'Enter' || event.key === 'NumpadEnter' || event.keyCode === 13;
+        if (isEnter)
+            enterNavigationLocked = false;
+    });
+    window.addEventListener('blur', () => {
+        enterNavigationLocked = false;
     });
     document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove-farmer]');
