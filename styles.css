@@ -52,3 +52,18 @@
 @keyframes calculatePulse{0%{transform:scale(.97);box-shadow:0 0 0 0 rgba(22,163,74,.38)}45%{transform:scale(1.035);box-shadow:0 0 0 12px rgba(22,163,74,0)}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(22,163,74,0)}}
 
 [data-farmer-list-content][hidden]{display:none!important}
+
+body.modal-open{overflow:hidden}
+.confirm-modal{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px}
+.confirm-modal[hidden]{display:none}
+.confirm-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.58);backdrop-filter:blur(3px)}
+.confirm-card{position:relative;width:min(440px,100%);background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:22px;box-shadow:0 24px 70px rgba(15,23,42,.28);display:grid;grid-template-columns:48px 1fr;gap:14px;animation:confirmPop .18s ease}
+.confirm-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:#fee2e2;color:#b91c1c;font-size:24px;font-weight:900}
+.confirm-copy h3{margin:2px 0 7px;font-size:20px}.confirm-copy p{margin:0;color:#64748b;line-height:1.45}
+.confirm-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+.danger-button{background:#dc2626;color:#fff}.danger-button:hover{background:#b91c1c}
+@keyframes confirmPop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.plan-stale-banner{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px;padding:14px 16px;border:1px solid #fbbf24;background:#fffbeb;border-radius:14px;color:#78350f;box-shadow:0 6px 18px rgba(146,64,14,.08)}
+.plan-stale-banner div{display:flex;flex-direction:column;gap:3px}.plan-stale-banner strong{font-size:16px}.plan-stale-banner span{font-size:13px;color:#92400e}
+#plan-output.plan-stale>.panel,#plan-output.plan-stale>.plan-list,#plan-output.plan-stale>.tank-grid{opacity:.58}
+@media(max-width:640px){.confirm-card{grid-template-columns:42px 1fr;padding:18px}.confirm-icon{width:42px;height:42px}.confirm-actions{display:grid;grid-template-columns:1fr 1fr}.confirm-actions button{min-height:46px}.plan-stale-banner{align-items:stretch;flex-direction:column}.plan-stale-banner .primary{width:100%}}
