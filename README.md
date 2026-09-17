@@ -173,6 +173,8 @@ Interfejs powinien pokazać:
 
 Jeżeli odbiór mieści się w jednej pustej dostępnej komorze, planner nie może dzielić tego gospodarstwa między kilka komór. Musi znaleźć taki układ wcześniejszych odbiorów, aby całe mleko tego gospodarstwa trafiło do jednej komory. Podział jest dozwolony dopiero wtedy, gdy ilość mleka jest większa niż pojemność każdej pojedynczej dostępnej komory.
 
+Duże gospodarstwa mogą być używane do dopełniania już częściowo zajętych komór. Planner przy rankingu wariantów zachowuje wolną pojedynczą komorę dla późniejszych mniejszych gospodarstw, zamiast rozdrabniać mały odbiór między kilka komór.
+
 Zasada podstawowa:
 
 Jeśli całe mleko z gospodarstwa mieści się w jednej dostępnej komorze, algorytm powinien umieścić je w jednej komorze.
@@ -357,7 +359,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.24 jest przygotowana jako PWA.
+Wersja v1.25 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -368,7 +370,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.24
+milk-route-planner-v1.25
 ```
 
 ## OCR
@@ -426,4 +428,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.24 Offline**
+Aktualna wersja: **v1.25 Offline**
