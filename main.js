@@ -278,15 +278,6 @@ function bindEvents() {
         event.preventDefault();
         moveToNextForecast(input);
     });
-    document.querySelector('#farmer-body')?.addEventListener('keyup', (event) => {
-        const input = event.target instanceof Element ? event.target.closest('[data-farmer-liters]') : null;
-        const isEnter = event.key === 'Enter' || event.key === 'NumpadEnter' || event.keyCode === 13;
-        if (!input || !isEnter)
-            return;
-        event.preventDefault();
-        if (document.activeElement === input)
-            moveToNextForecast(input);
-    });
     document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove-farmer]');
         if (!button)
