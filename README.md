@@ -319,6 +319,16 @@ Usuwanie gospodarza korzysta z własnego okna potwierdzenia w interfejsie zamias
 
 Po poprawnym obliczeniu planu każda zmiana danych mających wpływ na trasę oznacza wynik jako **„Plan nieaktualny”**. Nad starym wynikiem pojawia się żółty komunikat i przycisk „Policz ponownie”. Stary plan pozostaje widoczny, ale jest przygaszony do czasu ponownego obliczenia.
 
+## Podsumowanie trasy na żywo
+
+Pod listą gospodarzy aplikacja pokazuje liczbę gospodarzy, sumę wpisanych prognoz oraz liczbę gospodarstw z możliwością wjazdu z przyczepą. Odbiory od 4000 l są delikatnie wyróżniane.
+
+Przycisk „Wyczyść trasę” usuwa dane bieżącej trasy i wynik planowania, ale nie usuwa zapisanych profili pojazdów.
+
+Przed wynikiem obliczenia aplikacja pokazuje krótkie podsumowanie danych użytych do planu.
+
+Jeśli błąd planowania zawiera numer gospodarza, aplikacja automatycznie przewija do odpowiedniego wiersza i chwilowo go wyróżnia.
+
 ## Tryb mobilny
 
 Na małym ekranie lista gospodarstw zmienia się z szerokiej tabeli w pionowe karty.
@@ -334,7 +344,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.20 jest przygotowana jako PWA.
+Wersja v1.21 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -345,7 +355,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.20
+milk-route-planner-v1.21
 ```
 
 ## OCR
@@ -403,4 +413,4 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.20 Offline**
+Aktualna wersja: **v1.21 Offline**

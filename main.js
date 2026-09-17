@@ -69,6 +69,12 @@ function render() {
         <small>Wpisz liczbę gospodarzy, a aplikacja przygotuje dokładnie tyle wierszy.</small>
       </div>
       <div class="table-scroll" data-farmer-list-content hidden><table id="farmer-table" class="farmer-table"><thead><tr><th>LP</th><th>Gospodarz</th><th>Prognoza</th><th data-trailer-column>Wjazd przyczepą</th><th></th></tr></thead><tbody id="farmer-body">${farmerRows()}</tbody></table></div>
+      <div class="route-summary" data-farmer-list-content hidden>
+        <div><span>Gospodarze</span><strong id="summary-farmers">0</strong></div>
+        <div><span>Suma prognoz</span><strong id="summary-liters">0 l</strong></div>
+        <div data-summary-trailer><span>Wjazd przyczepą</span><strong id="summary-trailer">0</strong></div>
+        <button id="clear-route" type="button" class="clear-route-button">Wyczyść trasę</button>
+      </div>
       <div class="route-options" data-farmer-list-content hidden>
         <label>Preferowane przepompowanie po gospodarzu
           <input id="preferred-transfer-order" type="number" min="1" placeholder="auto">
@@ -148,6 +154,43 @@ function writeFarmerDrafts(rows) {
         countInput.value = farmerRowCount > 0 ? String(farmerRowCount) : '';
     syncFarmerListVisibility();
     syncTrailerAvailability(trailerEnabled);
+    updateRouteSummary();
+}
+function updateRouteSummary() {
+    const drafts = readFarmerDrafts();
+    const liters = drafts.reduce((sum, row) => sum + (Number(row.liters) || 0), 0);
+    const trailerCount = drafts.filter((row) => row.trailerAccess).length;
+    const farmersEl = document.querySelector('#summary-farmers');
+    const litersEl = document.querySelector('#summary-liters');
+    const trailerEl = document.querySelector('#summary-trailer');
+    const trailerSummary = document.querySelector('[data-summary-trailer]');
+    if (farmersEl)
+        farmersEl.textContent = String(farmerRowCount);
+    if (litersEl)
+        litersEl.textContent = `${liters.toLocaleString('pl-PL')} l`;
+    if (trailerEl)
+        trailerEl.textContent = String(trailerCount);
+    if (trailerSummary)
+        trailerSummary.hidden = !(document.querySelector('#use-trailer')?.checked ?? false);
+    document.querySelectorAll('[data-farmer-liters]').forEach((input) => {
+        const row = input.closest('tr');
+        row?.classList.toggle('large-pickup', (Number(input.value) || 0) >= 4000);
+    });
+}
+function focusFarmerFromError(message) {
+    const match = String(message).match(/gospodarz(?:u)?\s+(\d+)/i);
+    if (!match)
+        return false;
+    const index = Number(match[1]) - 1;
+    const input = document.querySelector(`[data-farmer-liters="${index}"]`) || document.querySelector(`[data-farmer-name="${index}"]`);
+    const row = input?.closest('tr');
+    if (!input)
+        return false;
+    row?.classList.add('farmer-error-focus');
+    input.focus({ preventScroll: true });
+    row?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.setTimeout(() => row?.classList.remove('farmer-error-focus'), 1800);
+    return true;
 }
 function syncFarmerListVisibility() {
     const visible = farmerRowCount > 0;
@@ -263,6 +306,7 @@ function updateConnectionStatus() {
 function bindEvents() {
     document.querySelector('#use-trailer')?.addEventListener('change', (event) => {
         syncTrailerAvailability(event.target.checked);
+        updateRouteSummary();
         markPlanStale();
     });
     document.querySelector('#saved-truck')?.addEventListener('change', (event) => {
@@ -273,6 +317,7 @@ function bindEvents() {
             markPlanStale();
         }
         syncDeleteProfileButtons();
+    updateRouteSummary();
     });
     document.querySelector('#saved-trailer')?.addEventListener('change', (event) => {
         const reg = event.target.value;
@@ -395,7 +440,34 @@ function bindEvents() {
         if (!confirmed)
             return;
         writeFarmerDrafts(removeFarmerDraft(drafts, index));
+        updateRouteSummary();
         markPlanStale();
+    });
+    document.querySelector('#clear-route')?.addEventListener('click', async () => {
+        const confirmed = await showConfirmDialog({
+            title: 'Wyczyścić trasę?',
+            message: 'Wszystkie gospodarstwa, prognozy, ustawienia wjazdu przyczepy i aktualny plan zostaną usunięte. Zapisane profile pojazdów pozostaną bez zmian.',
+            confirmText: 'Wyczyść trasę',
+        });
+        if (!confirmed)
+            return;
+        farmerRowCount = 0;
+        hasCalculatedPlan = false;
+        const body = document.querySelector('#farmer-body');
+        if (body)
+            body.innerHTML = '';
+        const countInput = document.querySelector('#farmer-count');
+        if (countInput)
+            countInput.value = '';
+        const preferred = document.querySelector('#preferred-transfer-order');
+        if (preferred)
+            preferred.value = '';
+        const output = document.querySelector('#plan-output');
+        if (output)
+            output.innerHTML = '';
+        syncFarmerListVisibility();
+        updateRouteSummary();
+        document.querySelector('#farmer-count')?.focus();
     });
     document.querySelector('#calculate')?.addEventListener('click', (event) => {
         animateActionButton(event.currentTarget, 'calculate-pulse', 650);
@@ -411,14 +483,16 @@ function bindEvents() {
             const trailer = useTrailer ? readProfile('trailer') : undefined;
             const preferredTransferAfterFarmerOrder = parsePreferredTransferOrder(document.querySelector('#preferred-transfer-order')?.value ?? '', farmers.length);
             const plan = planRoute({ truck, trailer, farmers, preferredTransferAfterFarmerOrder });
-            output.innerHTML = renderPlanHtml(plan);
+            output.innerHTML = `<div class="precalc-summary">Policzono dla: <strong>${farmers.length} gospodarzy</strong> · <strong>${farmers.reduce((sum, farmer) => sum + farmer.forecastLiters, 0).toLocaleString('pl-PL')} l</strong>${useTrailer ? ` · <strong>${farmers.filter((farmer) => farmer.trailerAccess).length} z wjazdem przyczepą</strong>` : ''}</div>` + renderPlanHtml(plan);
             hasCalculatedPlan = true;
             clearPlanStale();
             output.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         catch (error) {
             hasCalculatedPlan = false;
-            output.innerHTML = `<section class="panel error-panel"><h2>Sprawdź dane</h2><p>${error instanceof Error ? error.message : String(error)}</p></section>`;
+            const message = error instanceof Error ? error.message : String(error);
+            output.innerHTML = `<section class="panel error-panel"><h2>Sprawdź dane</h2><p>${message}</p></section>`;
+            focusFarmerFromError(message);
         }
     });
     const routePanel = document.querySelector('main');
@@ -426,15 +500,21 @@ function bindEvents() {
         const target = event.target;
         if (!(target instanceof Element))
             return;
-        if (target.matches('[data-farmer-name],[data-farmer-liters],#preferred-transfer-order,#truck-c0,#truck-c1,#truck-c2,#trailer-c0,#trailer-c1,#trailer-c2'))
+        if (target.matches('[data-farmer-name],[data-farmer-liters],#preferred-transfer-order,#truck-c0,#truck-c1,#truck-c2,#trailer-c0,#trailer-c1,#trailer-c2')) {
+            if (target.matches('[data-farmer-liters]'))
+                updateRouteSummary();
             markPlanStale();
+        }
     });
     routePanel?.addEventListener('change', (event) => {
         const target = event.target;
         if (!(target instanceof Element))
             return;
-        if (target.matches('[data-farmer-trailer],#use-trailer,#saved-truck,#saved-trailer'))
+        if (target.matches('[data-farmer-trailer],#use-trailer,#saved-truck,#saved-trailer')) {
+            if (target.matches('[data-farmer-trailer],#use-trailer'))
+                updateRouteSummary();
             markPlanStale();
+        }
     });
     syncFarmerListVisibility();
     syncTrailerAvailability(document.querySelector('#use-trailer')?.checked ?? false);

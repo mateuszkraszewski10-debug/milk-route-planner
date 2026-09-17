@@ -67,3 +67,15 @@ body.modal-open{overflow:hidden}
 .plan-stale-banner div{display:flex;flex-direction:column;gap:3px}.plan-stale-banner strong{font-size:16px}.plan-stale-banner span{font-size:13px;color:#92400e}
 #plan-output.plan-stale>.panel,#plan-output.plan-stale>.plan-list,#plan-output.plan-stale>.tank-grid{opacity:.58}
 @media(max-width:640px){.confirm-card{grid-template-columns:42px 1fr;padding:18px}.confirm-icon{width:42px;height:42px}.confirm-actions{display:grid;grid-template-columns:1fr 1fr}.confirm-actions button{min-height:46px}.plan-stale-banner{align-items:stretch;flex-direction:column}.plan-stale-banner .primary{width:100%}}
+
+.route-summary{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr)) auto;gap:10px;margin-top:14px;padding:14px;border:1px solid #dbeafe;background:#f8fbff;border-radius:14px;align-items:stretch}
+.route-summary>div{display:flex;flex-direction:column;gap:3px;padding:8px 10px;background:#fff;border:1px solid #e2e8f0;border-radius:10px}
+.route-summary span{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#64748b;font-weight:800}.route-summary strong{font-size:18px;color:#0f172a}
+.clear-route-button{background:#fff1f2;color:#be123c;border:1px solid #fecdd3;align-self:stretch}.clear-route-button:hover{background:#ffe4e6}
+.farmer-table tr.large-pickup td{background:#fffaf0}.farmer-table tr.large-pickup td:first-child{box-shadow:inset 4px 0 0 #f59e0b}
+.farmer-table tr.large-pickup input[data-farmer-liters]{border-color:#f59e0b;background:#fffbeb}
+.farmer-table tr.farmer-error-focus td{animation:errorRowFlash 1.7s ease}
+@keyframes errorRowFlash{0%,100%{background:inherit}20%,70%{background:#fee2e2}}
+.precalc-summary{margin:0 0 14px;padding:12px 14px;border:1px solid #bbf7d0;background:#f0fdf4;color:#166534;border-radius:12px;font-size:13px}
+@media(max-width:760px){.route-summary{grid-template-columns:1fr 1fr}.route-summary .clear-route-button{grid-column:1/-1;min-height:46px}}
+@media(max-width:430px){.route-summary{grid-template-columns:1fr}.route-summary .clear-route-button{grid-column:auto}}
