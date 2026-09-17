@@ -295,6 +295,16 @@ Pojemności użytkowe wynoszą:
 31410 l pojemności użytkowej
 ```
 
+## Ustawianie liczby gospodarzy
+
+W sekcji gospodarzy można wpisać liczbę gospodarzy na trasie i utworzyć dokładnie taką liczbę wierszy.
+
+- zakres: 1–60 gospodarzy,
+- zwiększenie liczby zachowuje już wpisane dane i dodaje puste wiersze,
+- zmniejszenie liczby zachowuje pierwsze wiersze,
+- jeśli usuwane dalsze wiersze zawierają dane, aplikacja prosi o potwierdzenie,
+- przycisk „+ Dodaj wiersz” nadal dodaje pojedynczy wiersz i ma wizualną animację potwierdzającą kliknięcie.
+
 ## Tryb mobilny
 
 Na małym ekranie lista gospodarstw zmienia się z szerokiej tabeli w pionowe karty.
@@ -310,7 +320,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.9 jest przygotowana jako PWA.
+Wersja v1.12 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -321,7 +331,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.9
+milk-route-planner-v1.12
 ```
 
 ## OCR
@@ -375,8 +385,8 @@ Przed i podczas kursu należy nadal kontrolować:
 | Mieszanie gospodarstw | dozwolone |
 | Bez przyczepy | tylko komory 1–3 |
 | Offline | tak |
-| OCR | wyłączony w v1.9 |
+| OCR | wyłączony |
 
 ## Status
 
-Aktualna wersja: **v1.9 Offline**
+Aktualna wersja: **v1.12 Offline**
