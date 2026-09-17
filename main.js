@@ -9,6 +9,7 @@ const app = document.querySelector('#app');
 if (!app)
     throw new Error('Missing #app');
 let farmerRowCount = 0;
+let hasCalculatedPlan = false;
 function profileOptions(kind) {
     return store.loadAll().filter((p) => p.kind === kind)
         .map((p) => `<option value="${p.registration}">${p.registration} · ${p.capacitiesLiters.join(' / ')} l</option>`)
@@ -78,7 +79,21 @@ function render() {
     </section>
 
     <div id="plan-output"></div>
-  </main>`;
+  </main>
+  <div id="confirm-modal" class="confirm-modal" hidden aria-hidden="true">
+    <div class="confirm-backdrop" data-confirm-cancel></div>
+    <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <div class="confirm-icon">!</div>
+      <div class="confirm-copy">
+        <h3 id="confirm-title">Potwierdź</h3>
+        <p id="confirm-message"></p>
+      </div>
+      <div class="confirm-actions">
+        <button type="button" class="secondary" data-confirm-cancel>Anuluj</button>
+        <button type="button" class="danger-button" id="confirm-accept">Usuń</button>
+      </div>
+    </div>
+  </div>`;
     bindEvents();
 }
 function readProfile(prefix) {
@@ -177,6 +192,66 @@ function animateActionButton(button, className = 'action-pulse', duration = 550)
     button.classList.add(className);
     window.setTimeout(() => button.classList.remove(className), duration);
 }
+function showConfirmDialog({ title = 'Potwierdź', message, confirmText = 'Usuń' }) {
+    const modal = document.querySelector('#confirm-modal');
+    const titleEl = document.querySelector('#confirm-title');
+    const messageEl = document.querySelector('#confirm-message');
+    const accept = document.querySelector('#confirm-accept');
+    if (!modal || !titleEl || !messageEl || !accept)
+        return Promise.resolve(false);
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+    accept.textContent = confirmText;
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    requestAnimationFrame(() => accept.focus());
+    return new Promise((resolve) => {
+        const finish = (result) => {
+            modal.hidden = true;
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            modal.removeEventListener('click', onClick);
+            window.removeEventListener('keydown', onKeyDown);
+            resolve(result);
+        };
+        const onClick = (event) => {
+            if (event.target === accept) {
+                finish(true);
+                return;
+            }
+            if (event.target.closest('[data-confirm-cancel]'))
+                finish(false);
+        };
+        const onKeyDown = (event) => {
+            if (event.key === 'Escape')
+                finish(false);
+        };
+        modal.addEventListener('click', onClick);
+        window.addEventListener('keydown', onKeyDown);
+    });
+}
+function markPlanStale() {
+    if (!hasCalculatedPlan)
+        return;
+    const output = document.querySelector('#plan-output');
+    if (!output || output.querySelector('.plan-stale-banner'))
+        return;
+    output.classList.add('plan-stale');
+    output.insertAdjacentHTML('afterbegin', `
+      <div class="plan-stale-banner">
+        <div><strong>Plan nieaktualny</strong><span>Dane trasy zostały zmienione po ostatnim obliczeniu.</span></div>
+        <button type="button" class="primary" data-recalculate-plan>Policz ponownie</button>
+      </div>`);
+    output.querySelector('[data-recalculate-plan]')?.addEventListener('click', () => {
+        document.querySelector('#calculate')?.click();
+    });
+}
+function clearPlanStale() {
+    const output = document.querySelector('#plan-output');
+    output?.classList.remove('plan-stale');
+    output?.querySelector('.plan-stale-banner')?.remove();
+}
 function updateConnectionStatus() {
     const el = document.querySelector('#connection-status');
     if (!el)
@@ -188,19 +263,24 @@ function updateConnectionStatus() {
 function bindEvents() {
     document.querySelector('#use-trailer')?.addEventListener('change', (event) => {
         syncTrailerAvailability(event.target.checked);
+        markPlanStale();
     });
     document.querySelector('#saved-truck')?.addEventListener('change', (event) => {
         const reg = event.target.value;
         const profile = store.loadAll().find((p) => p.kind === 'truck' && p.registration === reg);
-        if (profile)
+        if (profile) {
             fillProfile('truck', profile);
+            markPlanStale();
+        }
         syncDeleteProfileButtons();
     });
     document.querySelector('#saved-trailer')?.addEventListener('change', (event) => {
         const reg = event.target.value;
         const profile = store.loadAll().find((p) => p.kind === 'trailer' && p.registration === reg);
-        if (profile)
+        if (profile) {
             fillProfile('trailer', profile);
+            markPlanStale();
+        }
         syncDeleteProfileButtons();
     });
     document.querySelectorAll('[data-delete-profile]').forEach((button) => button.addEventListener('click', () => {
@@ -229,7 +309,7 @@ function bindEvents() {
             alert(error instanceof Error ? error.message : String(error));
         }
     }));
-    document.querySelector('#set-farmer-count')?.addEventListener('click', () => {
+    document.querySelector('#set-farmer-count')?.addEventListener('click', async () => {
         const input = document.querySelector('#farmer-count');
         const requested = Number(input?.value);
         if (!Number.isInteger(requested) || requested < 1 || requested > 60) {
@@ -240,19 +320,28 @@ function bindEvents() {
         if (requested < drafts.length) {
             const removed = drafts.slice(requested);
             const hasData = removed.some((row) => row.name.trim() || row.liters.trim() || row.trailerAccess);
-            if (hasData && !confirm(`Zmniejszyć listę do ${requested} gospodarzy? Dane z dalszych wierszy zostaną usunięte.`))
+            if (hasData) {
+            const confirmed = await showConfirmDialog({
+                title: 'Zmniejszyć listę gospodarzy?',
+                message: `Lista zostanie zmniejszona do ${requested} pozycji. Dane z dalszych wierszy zostaną usunięte.`,
+                confirmText: 'Zmniejsz listę',
+            });
+            if (!confirmed)
                 return;
+        }
         }
         const next = drafts.slice(0, requested);
         while (next.length < requested)
             next.push({ name: '', liters: '', trailerAccess: false });
         writeFarmerDrafts(next);
+        markPlanStale();
         if (input)
             input.value = String(farmerRowCount);
         animateActionButton(document.querySelector('#set-farmer-count'));
     });
     document.querySelector('#add-farmer')?.addEventListener('click', (event) => {
         writeFarmerDrafts(addFarmerDraft(readFarmerDrafts()));
+        markPlanStale();
         const countInput = document.querySelector('#farmer-count');
         if (countInput)
             countInput.value = String(farmerRowCount);
@@ -290,7 +379,7 @@ function bindEvents() {
     window.addEventListener('blur', () => {
         enterNavigationLocked = false;
     });
-    document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
+    document.querySelector('#farmer-body')?.addEventListener('click', async (event) => {
         const button = event.target.closest('[data-remove-farmer]');
         if (!button)
             return;
@@ -298,9 +387,15 @@ function bindEvents() {
         const drafts = readFarmerDrafts();
         const draft = drafts[index];
         const label = draft?.name.trim() || `Gospodarz ${index + 1}`;
-        if (!confirm(`Usunąć wiersz ${index + 1}: ${label}?`))
+        const confirmed = await showConfirmDialog({
+            title: 'Usunąć gospodarza?',
+            message: `Wiersz ${index + 1}: ${label} zostanie usunięty z trasy.`,
+            confirmText: 'Usuń gospodarza',
+        });
+        if (!confirmed)
             return;
         writeFarmerDrafts(removeFarmerDraft(drafts, index));
+        markPlanStale();
     });
     document.querySelector('#calculate')?.addEventListener('click', (event) => {
         animateActionButton(event.currentTarget, 'calculate-pulse', 650);
@@ -317,11 +412,29 @@ function bindEvents() {
             const preferredTransferAfterFarmerOrder = parsePreferredTransferOrder(document.querySelector('#preferred-transfer-order')?.value ?? '', farmers.length);
             const plan = planRoute({ truck, trailer, farmers, preferredTransferAfterFarmerOrder });
             output.innerHTML = renderPlanHtml(plan);
+            hasCalculatedPlan = true;
+            clearPlanStale();
             output.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         catch (error) {
+            hasCalculatedPlan = false;
             output.innerHTML = `<section class="panel error-panel"><h2>Sprawdź dane</h2><p>${error instanceof Error ? error.message : String(error)}</p></section>`;
         }
+    });
+    const routePanel = document.querySelector('main');
+    routePanel?.addEventListener('input', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element))
+            return;
+        if (target.matches('[data-farmer-name],[data-farmer-liters],#preferred-transfer-order,#truck-c0,#truck-c1,#truck-c2,#trailer-c0,#trailer-c1,#trailer-c2'))
+            markPlanStale();
+    });
+    routePanel?.addEventListener('change', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element))
+            return;
+        if (target.matches('[data-farmer-trailer],#use-trailer,#saved-truck,#saved-trailer'))
+            markPlanStale();
     });
     syncFarmerListVisibility();
     syncTrailerAvailability(document.querySelector('#use-trailer')?.checked ?? false);
