@@ -28,7 +28,7 @@ function farmerRows() {
     return Array.from({ length: farmerRowCount }, (_, i) => `<tr>
     <td class="lp-cell" data-label="LP">${i + 1}</td>
     <td data-label="Gospodarz"><input data-farmer-name="${i}" placeholder="Gospodarz ${i + 1}"></td>
-    <td data-label="Prognoza"><input data-farmer-liters="${i}" type="number" min="1" placeholder="litry"></td>
+    <td data-label="Prognoza"><input data-farmer-liters="${i}" type="number" min="1" inputmode="numeric" enterkeyhint="${i < farmerRowCount - 1 ? 'next' : 'done'}" placeholder="litry"></td>
     <td data-label="Przyczepa" data-trailer-column><label class="switch-label"><input data-farmer-trailer="${i}" type="checkbox"><span>TAK</span></label></td>
     <td class="row-actions" data-label=""><button type="button" class="remove-row" data-remove-farmer="${i}" aria-label="Usuń gospodarza ${i + 1}">Usuń</button></td>
   </tr>`).join('');
@@ -258,17 +258,34 @@ function bindEvents() {
             countInput.value = String(farmerRowCount);
         animateActionButton(event.currentTarget, 'row-added', 500);
     });
-    document.querySelector('#farmer-body')?.addEventListener('keydown', (event) => {
-        const input = event.target.closest('[data-farmer-liters]');
-        if (!input || event.key !== 'Enter')
-            return;
-        event.preventDefault();
+    const moveToNextForecast = (input) => {
         const index = Number(input.dataset.farmerLiters);
         const next = document.querySelector(`[data-farmer-liters="${index + 1}"]`);
         if (next) {
-            next.focus();
+            next.focus({ preventScroll: true });
             next.select();
+            next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return true;
         }
+        input.blur();
+        return false;
+    };
+    document.querySelector('#farmer-body')?.addEventListener('keydown', (event) => {
+        const input = event.target instanceof Element ? event.target.closest('[data-farmer-liters]') : null;
+        const isEnter = event.key === 'Enter' || event.key === 'NumpadEnter' || event.keyCode === 13;
+        if (!input || !isEnter)
+            return;
+        event.preventDefault();
+        moveToNextForecast(input);
+    });
+    document.querySelector('#farmer-body')?.addEventListener('keyup', (event) => {
+        const input = event.target instanceof Element ? event.target.closest('[data-farmer-liters]') : null;
+        const isEnter = event.key === 'Enter' || event.key === 'NumpadEnter' || event.keyCode === 13;
+        if (!input || !isEnter)
+            return;
+        event.preventDefault();
+        if (document.activeElement === input)
+            moveToNextForecast(input);
     });
     document.querySelector('#farmer-body')?.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove-farmer]');
