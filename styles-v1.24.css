@@ -102,3 +102,13 @@ body.driver-mode-open{overflow:hidden}
 .profile-actions{display:flex;gap:8px;flex-wrap:wrap}
 .profile-actions button{min-height:40px}
 @media(max-width:640px){.profile-actions{display:grid;grid-template-columns:1fr 1fr}.profile-actions .delete-profile{grid-column:1/-1;width:100%}}
+
+/* v1.35 compact profile action row */
+.profile-actions{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.profile-actions .secondary{flex:0 0 auto}
+.profile-actions .delete-profile{flex:0 0 auto;padding:7px 10px;font-size:12px;min-height:34px;align-self:center}
+@media(max-width:640px){
+  .profile-actions{display:flex;flex-wrap:wrap}
+  .profile-actions .secondary{flex:1 1 auto}
+  .profile-actions .delete-profile{width:auto;min-height:34px;padding:7px 10px;font-size:12px}
+}
