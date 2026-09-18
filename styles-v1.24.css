@@ -112,3 +112,36 @@ body.driver-mode-open{overflow:hidden}
   .profile-actions .secondary{flex:1 1 auto}
   .profile-actions .delete-profile{width:auto;min-height:34px;padding:7px 10px;font-size:12px}
 }
+
+/* v1.36 professional footer */
+.app-footer{margin-top:24px;background:linear-gradient(180deg,#0f172a 0%,#020617 100%);color:#e2e8f0;border-top:1px solid #1e293b}
+.footer-shell{max-width:1200px;margin:0 auto;padding:34px 18px 38px;display:grid;gap:22px}
+.footer-brand{display:flex;align-items:center;gap:18px}
+.footer-logo-wrap{position:relative;width:76px;height:76px;flex:0 0 76px}
+.footer-logo{position:relative;z-index:2;width:76px;height:76px;border-radius:20px;box-shadow:0 12px 30px rgba(0,0,0,.28);display:block}
+.footer-logo-glow{position:absolute;z-index:1;inset:10px;border-radius:999px;background:#3b82f6;filter:blur(22px);opacity:.38}
+.footer-brand-copy{display:flex;flex-direction:column;gap:4px}
+.footer-kicker{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:900;color:#93c5fd}
+.footer-brand-copy strong{font-size:18px;color:#fff}
+.footer-brand-copy small{color:#94a3b8;font-size:12px}
+.footer-safety{display:grid;grid-template-columns:52px 1fr;gap:16px;padding:20px;border:1px solid #334155;border-radius:18px;background:rgba(15,23,42,.72);box-shadow:0 16px 40px rgba(0,0,0,.16)}
+.footer-warning-icon{width:52px;height:52px;display:grid;place-items:center;border-radius:15px;background:#f59e0b;color:#111827;font-size:28px;font-weight:1000;box-shadow:0 0 0 6px rgba(245,158,11,.10)}
+.footer-safety h3{margin:2px 0 9px;color:#fbbf24;font-size:18px}
+.footer-safety p{margin:0 0 9px;color:#cbd5e1;line-height:1.55;font-size:13px}
+.footer-safety p strong{color:#fff}
+.footer-safety .footer-legal{margin-bottom:14px;color:#94a3b8;font-size:12px}
+.footer-checks{display:flex;flex-wrap:wrap;gap:8px}
+.footer-checks span{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #334155;border-radius:999px;background:#111827;color:#bfdbfe;font-size:11px;font-weight:800}
+@media(max-width:640px){
+  .footer-shell{padding:28px 14px 32px}
+  .footer-brand{align-items:flex-start}
+  .footer-logo-wrap,.footer-logo{width:62px;height:62px}
+  .footer-logo-wrap{flex-basis:62px}
+  .footer-logo{border-radius:17px}
+  .footer-brand-copy strong{font-size:16px}
+  .footer-safety{grid-template-columns:1fr;padding:16px}
+  .footer-warning-icon{width:44px;height:44px;font-size:23px}
+  .footer-safety p{font-size:12.5px}
+  .footer-checks{display:grid;grid-template-columns:1fr 1fr}
+  .footer-checks span{justify-content:center;text-align:center}
+}
