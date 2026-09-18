@@ -361,7 +361,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.30 jest przygotowana jako PWA.
+Wersja v1.31 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -372,7 +372,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.30
+milk-route-planner-v1.31
 ```
 
 ## OCR
@@ -430,7 +430,7 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.30 Offline**
+Aktualna wersja: **v1.31 Offline**
 
 
 ## Zasada napełniania dużego gospodarstwa
@@ -446,3 +446,8 @@ Dla gospodarstwa mieszczącego się w jednej komorze planner preferuje co najmni
 ## Patrzenie do przodu
 
 Podczas wyboru wariantu planner wykonuje krótką symulację kilku kolejnych mniejszych odbiorów. Preferuje wcześniejsze ułożenie komór, które pozwala późniejszym gospodarstwom wejść w pojedyncze komory z praktycznym marginesem, zamiast dopiero na końcu odkrywać brak bezpiecznego miejsca.
+
+
+## Minimalna liczba przepompowań
+
+Planner najpierw próbuje ułożyć trasę bez przepompowania. Jeśli to niemożliwe, zwiększa dopuszczalną liczbę przepompowań kolejno do 1, 2, 3 itd. i wybiera pierwszy wykonalny wariant. Każde przepompowanie nadal działa wyłącznie parami 1→4, 2→5 i 3→6, a zawartość wybranej komory auta jest przenoszona w całości.
