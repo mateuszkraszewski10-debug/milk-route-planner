@@ -361,7 +361,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.35 jest przygotowana jako PWA.
+Wersja v1.36 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -372,7 +372,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.35
+milk-route-planner-v1.36
 ```
 
 ## OCR
@@ -430,7 +430,7 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.35 Offline**
+Aktualna wersja: **v1.36 Offline**
 
 
 ## Zasada napełniania dużego gospodarstwa
@@ -471,3 +471,8 @@ Aplikacja pamięta ostatnio wybrane zapisane auto i przyczepę. Po ponownym uruc
 ## Kompaktowy przycisk usuwania pojazdu
 
 Przycisk „Usuń” przy zapisanym aucie lub przyczepie jest mniejszy i znajduje się w tym samym rzędzie obok „Dodaj nowe”, żeby sekcja pojazdów zajmowała mniej miejsca.
+
+
+## Stopka i zastrzeżenie odpowiedzialności
+
+Aplikacja zawiera profesjonalną stopkę z identyfikacją autora, prawami autorskimi i wyraźnym komunikatem, że Milk Route Planner jest wyłącznie narzędziem pomocniczym. Kierowca powinien samodzielnie zweryfikować litry, pojemności, zapas i przepompowania oraz pozostaje odpowiedzialny za decyzje podejmowane podczas załadunku i przewozu surowca. Zastrzeżenie odpowiedzialności jest sformułowane z uwzględnieniem ograniczeń wynikających z obowiązującego prawa.
