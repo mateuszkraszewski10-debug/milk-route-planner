@@ -361,7 +361,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.34 jest przygotowana jako PWA.
+Wersja v1.35 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -372,7 +372,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.34
+milk-route-planner-v1.35
 ```
 
 ## OCR
@@ -430,7 +430,7 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.34 Offline**
+Aktualna wersja: **v1.35 Offline**
 
 
 ## Zasada napełniania dużego gospodarstwa
@@ -466,3 +466,8 @@ Od v1.33 obliczenia planu działają w osobnym wątku Worker, dzięki czemu trud
 ## Automatyczny wybór pojazdu
 
 Aplikacja pamięta ostatnio wybrane zapisane auto i przyczepę. Po ponownym uruchomieniu wybiera je automatycznie, a pola rejestracji i pojemności komór pozostają schowane. Można je otworzyć przyciskiem „Edytuj”, a „Dodaj nowe” pokazuje pusty formularz nowego pojazdu.
+
+
+## Kompaktowy przycisk usuwania pojazdu
+
+Przycisk „Usuń” przy zapisanym aucie lub przyczepie jest mniejszy i znajduje się w tym samym rzędzie obok „Dodaj nowe”, żeby sekcja pojazdów zajmowała mniej miejsca.
