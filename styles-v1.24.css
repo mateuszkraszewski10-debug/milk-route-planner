@@ -97,3 +97,8 @@ body.driver-mode-open{overflow:hidden}
 @media(max-width:640px){.plan-result-toolbar{flex-direction:column}.driver-mode-button{width:100%;min-height:48px}.driver-header{align-items:flex-start}.driver-exit{min-width:130px}.driver-stop{grid-template-columns:54px 1fr;padding:11px;gap:10px}.driver-stop-number{width:48px;height:48px;font-size:23px}.driver-stop-data{align-items:flex-start;flex-direction:column;gap:8px}.driver-stop-liters{font-size:22px}.driver-assignments{justify-content:flex-start;width:100%}.driver-assignment{flex:1;min-width:115px}.driver-route{padding:10px 10px 40px}}
 
 .version-badge{display:inline-flex;align-items:center;margin-left:8px;padding:3px 7px;border-radius:999px;background:#2563eb;color:#fff;font-size:10px;letter-spacing:.04em;vertical-align:middle}
+
+.vehicle-editor-wrap[hidden]{display:none!important}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap}
+.profile-actions button{min-height:40px}
+@media(max-width:640px){.profile-actions{display:grid;grid-template-columns:1fr 1fr}.profile-actions .delete-profile{grid-column:1/-1;width:100%}}
