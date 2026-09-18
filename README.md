@@ -361,7 +361,7 @@ Jeśli przyczepa jest wyłączona, pola związane z dostępem przyczepy są ukry
 
 ## Tryb offline
 
-Wersja v1.28 jest przygotowana jako PWA.
+Wersja v1.29 jest przygotowana jako PWA.
 
 Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 - aplikacja cache'uje potrzebne pliki,
@@ -372,7 +372,7 @@ Po pierwszym uruchomieniu przez HTTPS i instalacji na telefonie:
 Service Worker używa cache:
 
 ```
-milk-route-planner-v1.28
+milk-route-planner-v1.29
 ```
 
 ## OCR
@@ -430,9 +430,14 @@ Przed i podczas kursu należy nadal kontrolować:
 
 ## Status
 
-Aktualna wersja: **v1.28 Offline**
+Aktualna wersja: **v1.29 Offline**
 
 
 ## Zasada napełniania dużego gospodarstwa
 
 Przy dużym gospodarstwie każda komora wybrana przed ostatnią musi zostać dopełniona do swojej pojemności roboczej. Dopiero ostatnia komora może pozostać niepełna, gdy kończy się mleko u gospodarza. Planner może użyć jednej dodatkowej komory ponad minimum, jeśli jest to potrzebne, aby zachować późniejsze odbiory w pojedynczych komorach i uniknąć przepompowania.
+
+
+## Praktyczny margines przy odbiorze
+
+Dla gospodarstwa mieszczącego się w jednej komorze planner preferuje co najmniej 300 l praktycznego marginesu po odbiorze, jeżeli istnieje wykonalny wariant z takim zapasem. Dokładne dopełnienie komory do 0 l wolnego jest dozwolone; unikane są ciasne reszty od 1 do 299 l.
